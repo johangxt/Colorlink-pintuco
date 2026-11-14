@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ColorLink · Pintuco</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="brand-drop"></span>ColorLink <small>Tienda Pintuco &amp; servicios de pintura</small></div>
+    <div id="sesion" class="sesion"></div>
+  </header>
+
+  <!-- ===== Acceso ===== -->
+  <main id="vista-acceso" class="acceso">
+    <section class="hero">
+      <h1>Pinta tus espacios sin complicaciones</h1>
+      <p>Compra pinturas, calcula cuántos galones necesitas según los metros cuadrados y contrata a un pintor calificado. Nuestro asistente con IA te asesora en todo momento.</p>
+      <ul class="hero-list">
+        <li>Calculadora de galones por m²</li>
+        <li>Pintores que aceptan y gestionan tu solicitud</li>
+        <li>Calificación del servicio</li>
+        <li>Chatbot con inteligencia artificial</li>
+      </ul>
+    </section>
+    <section class="card auth-card">
+      <div class="tabs-inline">
+        <button class="tab-btn activo" data-auth="login">Iniciar sesión</button>
+        <button class="tab-btn" data-auth="registro">Crear cuenta</button>
+      </div>
+      <form id="form-login" class="form">
+        <label>Correo<input type="email" name="email" required autocomplete="email" /></label>
+        <label>Contraseña<input type="password" name="password" required autocomplete="current-password" /></label>
+        <button class="btn primario" type="submit">Ingresar</button>
+        <p class="ayuda">Demo: <code>ana@cliente.test</code>, <code>carlos@pintuco.test</code> o <code>admin@pintuco.test</code> · clave <code>Pintuco123*</code></p>
+      </form>
+      <form id="form-registro" class="form oculto">
+        <label>Nombre completo<input name="nombre" required minlength="3" /></label>
+        <label>Correo<input type="email" name="email" required /></label>
+        <label>Teléfono<input name="telefono" /></label>
+        <label>Contraseña (mín. 8)<input type="password" name="password" required minlength="8" /></label>
+        <label>Tipo de cuenta
+          <select name="rol"><option value="cliente">Cliente</option><option value="pintor">Pintor</option></select>
+        </label>
+        <button class="btn primario" type="submit">Registrarme</button>
+      </form>
+    </section>
+  </main>
+
+  <!-- ===== Aplicación ===== -->
+  <main id="vista-app" class="oculto">
+    <nav id="menu" class="menu"></nav>
+    <section id="contenido" class="contenido"></section>
+  </main>
+
+  <!-- ===== Chatbot ===== -->
+  <button id="chat-toggle" class="chat-toggle oculto" title="Asistente con IA">💬</button>
+  <aside id="chat" class="chat oculto">
+    <div class="chat-head">
+      <strong>PintuBot</strong> <span class="chat-sub">Asistente con IA</span>
+      <button id="chat-limpiar" class="link" title="Borrar conversación">Limpiar</button>
+      <button id="chat-cerrar" class="link">✕</button>
+    </div>
+    <div id="chat-msgs" class="chat-msgs"></div>
+    <form id="chat-form" class="chat-form">
+      <input id="chat-input" placeholder="Ej: ¿cuántos galones necesito para 45 m²?" maxlength="1000" autocomplete="off" />
+      <button class="btn primario">Enviar</button>
+    </form>
+  </aside>
+
+  <div id="toast" class="toast oculto"></div>
+  <script src="/js/api.js"></script>
+  <script src="/js/vistas.js"></script>
+  <script src="/js/chat.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>
