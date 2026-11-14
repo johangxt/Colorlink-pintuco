@@ -1,0 +1,285 @@
+{
+  "resumen": {
+    "clientes": 42,
+    "pintores": 6,
+    "productos_activos": 8,
+    "pedidos": 86,
+    "solicitudes": 71,
+    "ventas_pedidos": 57939000,
+    "ventas_solicitudes": 38036000,
+    "ventas_totales": 95975000,
+    "ticket_promedio_pedido": 673709,
+    "tasa_completadas_pct": 87.3,
+    "tasa_cancelacion_pct": 2.8,
+    "calificacion_promedio": 4.14,
+    "calificacion_desviacion": 0.96,
+    "total_calificaciones": 49
+  },
+  "area_m2": {
+    "media": 62.95,
+    "mediana": 56.9,
+    "desviacion": 27.43,
+    "min": 21,
+    "max": 135.9
+  },
+  "horas_hasta_aceptacion": {
+    "media": 8.75,
+    "mediana": 6.5,
+    "muestras": 64
+  },
+  "solicitudes_por_estado": {
+    "pendiente": 5,
+    "aceptada": 0,
+    "en_proceso": 2,
+    "completada": 62,
+    "cancelada": 2
+  },
+  "top_pinturas": [
+    {
+      "pintura_id": 1,
+      "nombre": "Vinilo Tipo 1 Blanco Hueso",
+      "galones": 221,
+      "ingresos": 21658000
+    },
+    {
+      "pintura_id": 3,
+      "nombre": "Vinilo Tipo 2 Azul Cielo",
+      "galones": 151,
+      "ingresos": 9362000
+    },
+    {
+      "pintura_id": 7,
+      "nombre": "Impermeabilizante Techos Rojo",
+      "galones": 136,
+      "ingresos": 21488000
+    },
+    {
+      "pintura_id": 2,
+      "nombre": "Vinilo Tipo 1 Gris Perla",
+      "galones": 88,
+      "ingresos": 8976000
+    },
+    {
+      "pintura_id": 4,
+      "nombre": "Vinilo Fachadas Terracota",
+      "galones": 83,
+      "ingresos": 11205000
+    },
+    {
+      "pintura_id": 8,
+      "nombre": "Anticorrosivo Gris",
+      "galones": 79,
+      "ingresos": 9322000
+    },
+    {
+      "pintura_id": 5,
+      "nombre": "Esmalte Sintético Negro",
+      "galones": 76,
+      "ingresos": 11020000
+    },
+    {
+      "pintura_id": 6,
+      "nombre": "Esmalte Base Agua Blanco",
+      "galones": 23,
+      "ingresos": 2944000
+    }
+  ],
+  "ventas_por_dia": [
+    {
+      "fecha": "2026-10-15",
+      "total": 1641000
+    },
+    {
+      "fecha": "2026-10-16",
+      "total": 10100000
+    },
+    {
+      "fecha": "2026-10-17",
+      "total": 2893000
+    },
+    {
+      "fecha": "2026-10-18",
+      "total": 1475000
+    },
+    {
+      "fecha": "2026-10-19",
+      "total": 1453000
+    },
+    {
+      "fecha": "2026-10-20",
+      "total": 1944000
+    },
+    {
+      "fecha": "2026-10-21",
+      "total": 1122000
+    },
+    {
+      "fecha": "2026-10-22",
+      "total": 3310000
+    },
+    {
+      "fecha": "2026-10-23",
+      "total": 3672000
+    },
+    {
+      "fecha": "2026-10-24",
+      "total": 5204000
+    },
+    {
+      "fecha": "2026-10-25",
+      "total": 5074000
+    },
+    {
+      "fecha": "2026-10-26",
+      "total": 2069000
+    },
+    {
+      "fecha": "2026-10-27",
+      "total": 4112000
+    },
+    {
+      "fecha": "2026-10-28",
+      "total": 1339000
+    },
+    {
+      "fecha": "2026-10-29",
+      "total": 2786000
+    },
+    {
+      "fecha": "2026-10-30",
+      "total": 4452000
+    },
+    {
+      "fecha": "2026-10-31",
+      "total": 4815000
+    },
+    {
+      "fecha": "2026-11-01",
+      "total": 3577000
+    },
+    {
+      "fecha": "2026-11-02",
+      "total": 1946000
+    },
+    {
+      "fecha": "2026-11-03",
+      "total": 2898000
+    },
+    {
+      "fecha": "2026-11-04",
+      "total": 1424000
+    },
+    {
+      "fecha": "2026-11-05",
+      "total": 2498000
+    },
+    {
+      "fecha": "2026-11-06",
+      "total": 4494000
+    },
+    {
+      "fecha": "2026-11-07",
+      "total": 4036000
+    },
+    {
+      "fecha": "2026-11-08",
+      "total": 128000
+    },
+    {
+      "fecha": "2026-11-09",
+      "total": 4711000
+    },
+    {
+      "fecha": "2026-11-10",
+      "total": 1784000
+    },
+    {
+      "fecha": "2026-11-11",
+      "total": 3379000
+    },
+    {
+      "fecha": "2026-11-12",
+      "total": 5234000
+    },
+    {
+      "fecha": "2026-11-13",
+      "total": 2405000
+    }
+  ],
+  "ranking_pintores": [
+    {
+      "pintor_id": 3,
+      "nombre": "Laura Pintora",
+      "calificaciones": 5,
+      "promedio": 4.4,
+      "completadas": 7
+    },
+    {
+      "pintor_id": 47,
+      "nombre": "Sofía Pintora",
+      "calificaciones": 9,
+      "promedio": 4.33,
+      "completadas": 12
+    },
+    {
+      "pintor_id": 49,
+      "nombre": "Valentina Pintora",
+      "calificaciones": 16,
+      "promedio": 4.19,
+      "completadas": 18
+    },
+    {
+      "pintor_id": 2,
+      "nombre": "Carlos Pintor",
+      "calificaciones": 8,
+      "promedio": 4,
+      "completadas": 10
+    },
+    {
+      "pintor_id": 46,
+      "nombre": "Diego Pintor",
+      "calificaciones": 7,
+      "promedio": 4,
+      "completadas": 11
+    },
+    {
+      "pintor_id": 48,
+      "nombre": "Andrés Pintor",
+      "calificaciones": 4,
+      "promedio": 3.75,
+      "completadas": 4
+    }
+  ],
+  "distribucion_calificaciones": [
+    {
+      "estrellas": 1,
+      "cantidad": 1
+    },
+    {
+      "estrellas": 2,
+      "cantidad": 1
+    },
+    {
+      "estrellas": 3,
+      "cantidad": 10
+    },
+    {
+      "estrellas": 4,
+      "cantidad": 15
+    },
+    {
+      "estrellas": 5,
+      "cantidad": 22
+    }
+  ],
+  "stock_bajo": [],
+  "holgura_calculadora_pct": {
+    "media": 29,
+    "min": 10.3,
+    "max": 85.6
+  },
+  "metadatos": {
+    "fuente": "simulación reproducible (semilla 2026, 30 días, 40 clientes, 6 pintores)",
+    "generado": "2026-11-14T06:40:29.452Z"
+  }
+}
