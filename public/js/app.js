@@ -1,77 +1,86 @@
-// Controlador principal: sesión, menú por rol y navegación
-const MENUS = {
-  cliente: [
-    ['catalogo', 'Catálogo', () => VistasCliente.catalogo()],
-    ['carrito', 'Carrito', () => VistasCliente.carrito()],
-    ['solicitar', 'Solicitar servicio', () => VistasCliente.solicitar()],
-    ['misSolicitudes', 'Mis solicitudes', () => VistasCliente.misSolicitudes()],
-    ['pedidos', 'Mis compras', () => VistasCliente.pedidos()],
-  ],
-  pintor: [
-    ['disponibles', 'Solicitudes disponibles', () => VistasPintor.disponibles()],
-    ['trabajos', 'Mis trabajos', () => VistasPintor.trabajos()],
-  ],
-  admin: [
-    ['dashboard', 'Indicadores', () => VistasAdmin.dashboard()],
-    ['inventario', 'Inventario', () => VistasAdmin.inventario()],
-    ['solicitudesAdmin', 'Solicitudes', () => VistasAdmin.solicitudes()],
-    ['usuarios', 'Usuarios', () => VistasAdmin.usuarios()],
-  ],
+// Enrutador y navegación por rol
+const RUTAS = {
+  '/': { vista: () => Tienda.inicio() },
+  '/pinturas': { vista: (q) => Tienda.pinturas(q) },
+  '/calculadora': { vista: (q) => Tienda.calculadora(q) },
+  '/servicio': { vista: (q) => Tienda.servicio(q) },
+  '/mis-solicitudes': { vista: () => Tienda.misSolicitudes(), rol: 'cliente' },
+  '/mis-compras': { vista: () => Tienda.misCompras(), rol: 'cliente' },
+  '/pintor': { vista: () => Pintor.disponibles(), rol: 'pintor' },
+  '/pintor/trabajos': { vista: () => Pintor.trabajos(), rol: 'pintor' },
+  '/admin': { vista: () => Admin.indicadores(), rol: 'admin' },
+  '/admin/inventario': { vista: () => Admin.inventario(), rol: 'admin' },
+  '/admin/solicitudes': { vista: () => Admin.solicitudes(), rol: 'admin' },
+  '/admin/usuarios': { vista: () => Admin.usuarios(), rol: 'admin' },
 };
 
+const NAV = {
+  visitante: [['#/pinturas', 'Pinturas'], ['#/calculadora', 'Calculadora'], ['#/servicio', 'Contratar pintor']],
+  cliente: [['#/pinturas', 'Pinturas'], ['#/calculadora', 'Calculadora'], ['#/servicio', 'Contratar pintor'], ['#/mis-solicitudes', 'Mis solicitudes'], ['#/mis-compras', 'Mis compras']],
+  pintor: [['#/pintor', 'Mi panel'], ['#/pinturas', 'Tienda'], ['#/calculadora', 'Calculadora']],
+  admin: [['#/admin', 'Panel'], ['#/pinturas', 'Tienda'], ['#/calculadora', 'Calculadora']],
+};
+const INICIO_ROL = { cliente: '#/', pintor: '#/pintor', admin: '#/admin' };
+
 const App = {
-  actual: null,
   iniciar() {
-    document.querySelectorAll('[data-auth]').forEach((b) => b.addEventListener('click', () => {
-      document.querySelectorAll('[data-auth]').forEach((x) => x.classList.toggle('activo', x === b));
-      document.getElementById('form-login').classList.toggle('oculto', b.dataset.auth !== 'login');
-      document.getElementById('form-registro').classList.toggle('oculto', b.dataset.auth !== 'registro');
-    }));
-    document.getElementById('form-login').addEventListener('submit', (e) => this.autenticar(e, '/auth/login'));
-    document.getElementById('form-registro').addEventListener('submit', (e) => this.autenticar(e, '/auth/registro'));
+    $('#btn-cuenta').addEventListener('click', () => Cuenta.abrir());
+    $('#btn-carrito').addEventListener('click', () => Carrito.abrir());
+    $('#btn-menu').addEventListener('click', () => this.menuMovil());
+    $('#velo').addEventListener('click', () => Capas.cerrar());
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { Capas.cerrar(); $$('.modal-fondo').forEach((m) => m.remove()); } });
+    window.addEventListener('hashchange', () => this.navegar());
     Chat.init();
-    if (Sesion.token && Sesion.usuario) this.entrar(); else this.mostrarAcceso();
+    Carrito.contador();
+    this.navegar();
   },
-  async autenticar(e, ruta) {
-    e.preventDefault();
-    try {
-      const { token, usuario } = await api(ruta, { method: 'POST', body: datosForm(e.target) });
-      Sesion.guardar(token, usuario);
-      this.entrar();
-    } catch (err) { toast(err.message, true); }
-  },
-  mostrarAcceso() {
-    document.getElementById('vista-acceso').classList.remove('oculto');
-    document.getElementById('vista-app').classList.add('oculto');
-    document.getElementById('chat-toggle').classList.add('oculto');
-    document.getElementById('chat').classList.add('oculto');
-    document.getElementById('sesion').innerHTML = '';
-  },
-  entrar() {
+
+  pintarNav(ruta) {
+    const enlaces = NAV[Sesion.rol] || NAV.visitante;
+    const activo = (h) => h === '#' + ruta || (h.length > 3 && ['#/pintor', '#/admin'].includes(h) && ('#' + ruta).startsWith(h));
+    $('#nav').innerHTML = enlaces.map(([h, t]) => `<a href="${h}" class="${activo(h) ? 'activo' : ''}">${t}</a>`).join('');
     const u = Sesion.usuario;
-    document.getElementById('vista-acceso').classList.add('oculto');
-    document.getElementById('vista-app').classList.remove('oculto');
-    document.getElementById('chat-toggle').classList.remove('oculto');
-    document.getElementById('sesion').innerHTML = `<span>${esc(u.nombre)}</span><span class="rol">${esc(u.rol)}</span><button class="link" id="salir">Salir</button>`;
-    document.getElementById('salir').addEventListener('click', () => { Sesion.cerrar(); location.reload(); });
-    this.ir(MENUS[u.rol][0][0]);
+    $('#btn-cuenta').title = u ? `${u.nombre} (${u.rol})` : 'Ingresar';
+    $('#btn-cuenta').style.background = u ? 'var(--hueso)' : '';
+    $('#btn-carrito').classList.toggle('oculto', ['pintor', 'admin'].includes(Sesion.rol));
   },
-  actualizarMenu() {
-    const u = Sesion.usuario;
-    if (!u) return;
-    document.getElementById('menu').innerHTML = MENUS[u.rol].map(([id, nombre]) => {
-      const extra = id === 'carrito' && Carrito.unidades() ? ` (${Carrito.unidades()})` : '';
-      return `<button class="tab-btn ${id === this.actual ? 'activo' : ''}" data-ir="${id}">${nombre}${extra}</button>`;
-    }).join('');
-    document.querySelectorAll('[data-ir]').forEach((b) => b.addEventListener('click', () => this.ir(b.dataset.ir)));
+
+  menuMovil() {
+    const enlaces = NAV[Sesion.rol] || NAV.visitante;
+    const c = $('#cajon-menu');
+    c.innerHTML = `
+      <div class="cajon-cab"><a href="#/" class="logo"><span class="logo-gota"></span>colorlink</a><button class="icono-btn" data-cerrar aria-label="Cerrar">✕</button></div>
+      <div class="cajon-cuerpo menu-movil">${enlaces.map(([h, t]) => `<a href="${h}">${t}</a>`).join('')}
+        <a href="#" data-abrir-chat>Asesor de color IA</a></div>
+      <div class="cajon-pie"><button class="btn negro ancho" id="menu-cuenta">${Sesion.usuario ? 'Mi cuenta' : 'Ingresar'}</button></div>`;
+    $$('a, [data-cerrar]', c).forEach((a) => a.addEventListener('click', () => Capas.cerrar()));
+    $('#menu-cuenta', c).addEventListener('click', () => { Capas.cerrar(); Cuenta.abrir(); });
+    Capas.abrir('#cajon-menu');
   },
-  async ir(id) {
-    const item = MENUS[Sesion.usuario.rol].find(([k]) => k === id);
-    if (!item) return;
-    this.actual = id;
-    this.actualizarMenu();
-    document.getElementById('contenido').innerHTML = '<p class="vacio">Cargando…</p>';
-    try { await item[2](); } catch (err) { document.getElementById('contenido').innerHTML = `<p class="card vacio">${esc(err.message)}</p>`; }
+
+  async navegar() {
+    const [ruta, query = ''] = (location.hash.slice(1) || '/').split('?');
+    const def = RUTAS[ruta] || RUTAS['/'];
+    Capas.cerrar();
+    this.pintarNav(ruta);
+    if (def.rol && Sesion.rol !== def.rol) {
+      if (!Sesion.usuario) { location.hash = '#/'; Cuenta.abrir('Ingresa para ver esta sección.'); }
+      else location.hash = INICIO_ROL[Sesion.rol] || '#/';
+      return;
+    }
+    $('#chat-flotante').classList.toggle('oculto', !$('#chat').classList.contains('oculto'));
+    vista().innerHTML = '<div class="contenedor"><div class="pagina-cab"><p>Cargando…</p></div></div>';
+    window.scrollTo(0, 0);
+    try { await def.vista(new URLSearchParams(query)); }
+    catch (err) { vista().innerHTML = `<div class="contenedor" style="padding:64px 0"><div class="vacio"><h3>No se pudo cargar</h3><p>${esc(err.message)}</p></div></div>`; }
+  },
+
+  alIniciarSesion() {
+    Chat.reiniciar();
+    Carrito.contador();
+    const destino = INICIO_ROL[Sesion.rol];
+    if (['pintor', 'admin'].includes(Sesion.rol) && location.hash !== destino) location.hash = destino;
+    else this.navegar();
   },
 };
 
