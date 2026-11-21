@@ -8,6 +8,9 @@ const config = {
   supabaseKey: process.env.SUPABASE_SERVICE_ROLE_KEY,
   jwtSecret: process.env.JWT_SECRET || 'cambia-este-secreto-en-produccion',
   jwtExpires: process.env.JWT_EXPIRES || '8h',
+  // Correo (verificación de cuenta) con Gmail + contraseña de aplicación
+  gmailUser: process.env.GMAIL_USER,
+  gmailPass: (process.env.GMAIL_APP_PASSWORD || '').replace(/\s/g, ''),
   // Chatbot: 'gemini' u 'openai'
   aiProvider: (process.env.AI_PROVIDER || 'openai').toLowerCase(),
   aiModel: process.env.AI_MODEL,

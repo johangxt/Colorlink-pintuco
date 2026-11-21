@@ -3,14 +3,15 @@ const express = require('express');
 const defaultConfig = require('./config');
 const { crearAuth } = require('./middleware/auth');
 const { createChatbot } = require('./services/chatbot');
+const { createMailer } = require('./services/correo');
 
 // Fábrica de la aplicación: permite inyectar repositorio y fetch (útil en pruebas)
-function createApp({ repo, config = defaultConfig, fetchImpl } = {}) {
+function createApp({ repo, config = defaultConfig, fetchImpl, mailer } = {}) {
   if (!repo) throw new Error('createApp requiere un repositorio de datos');
   const app = express();
   const auth = crearAuth({ config, repo });
   const chatbot = createChatbot({ config, fetchImpl: fetchImpl || globalThis.fetch });
-  const deps = { repo, config, auth, chatbot };
+  const deps = { repo, config, auth, chatbot, mailer: mailer || createMailer({ config }) };
 
   app.disable('x-powered-by');
   app.use(express.json({ limit: '100kb' }));

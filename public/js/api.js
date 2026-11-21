@@ -18,7 +18,7 @@ async function api(ruta, { method = 'GET', body } = {}) {
     location.hash = '#/';
     location.reload();
   }
-  if (!res.ok) throw new Error(data.error || `Error ${res.status}`);
+  if (!res.ok) { const err = new Error(data.error || `Error ${res.status}`); err.data = data; throw err; }
   return data;
 }
 

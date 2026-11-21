@@ -245,15 +245,45 @@ const Cuenta = {
     const enviar = (ruta) => async (e) => {
       e.preventDefault();
       try {
-        const { token, usuario } = await api(ruta, { method: 'POST', body: datosForm(e.target) });
+        const data = await api(ruta, { method: 'POST', body: datosForm(e.target) });
+        if (data.verificacion) { m.cerrar(); return Cuenta.verificar(data.email); }
+        Sesion.guardar(data.token, data.usuario);
+        m.cerrar();
+        toast(`Bienvenido, ${data.usuario.nombre.split(' ')[0]}`);
+        App.alIniciarSesion();
+      } catch (err) {
+        if (err.data?.requiereVerificacion) { m.cerrar(); return Cuenta.verificar(err.data.email); }
+        toast(err.message, true);
+      }
+    };
+    $('#f-login', m.el).addEventListener('submit', enviar('/auth/login'));
+    $('#f-registro', m.el).addEventListener('submit', enviar('/auth/registro'));
+  },
+  verificar(email) {
+    const m = modal(`
+      <h2>Verifica tu correo</h2>
+      <p class="sub">Enviamos un código de 6 dígitos a <strong>${esc(email)}</strong>. Vence en 10 minutos.</p>
+      <form class="form" id="f-codigo">
+        <label class="campo">Código<input name="codigo" required inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="one-time-code" placeholder="123456" /></label>
+        <button class="btn negro ancho">Verificar</button>
+        <p style="text-align:center;font-size:14px;color:var(--suave);margin:0">¿No llegó? Revisa spam o <button type="button" class="link" id="reenviar">reenvía el código</button></p>
+      </form>`);
+    $('#f-codigo', m.el).addEventListener('submit', async (e) => {
+      e.preventDefault();
+      try {
+        const { token, usuario } = await api('/auth/verificar', { method: 'POST', body: { email, codigo: datosForm(e.target).codigo } });
         Sesion.guardar(token, usuario);
         m.cerrar();
         toast(`Bienvenido, ${usuario.nombre.split(' ')[0]}`);
         App.alIniciarSesion();
       } catch (err) { toast(err.message, true); }
-    };
-    $('#f-login', m.el).addEventListener('submit', enviar('/auth/login'));
-    $('#f-registro', m.el).addEventListener('submit', enviar('/auth/registro'));
+    });
+    $('#reenviar', m.el).addEventListener('click', async () => {
+      try {
+        await api('/auth/reenviar', { method: 'POST', body: { email } });
+        toast('Te enviamos un código nuevo');
+      } catch (err) { toast(err.message, true); }
+    });
   },
   menu() {
     const u = Sesion.usuario;

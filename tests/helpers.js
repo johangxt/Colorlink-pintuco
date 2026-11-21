@@ -8,8 +8,11 @@ const PASS = 'Pintuco123*';
 function nuevaApp({ config = {}, fetchImpl } = {}) {
   const repo = createMemoryRepo();
   const cfg = { ...baseConfig, dbProvider: 'memory', jwtSecret: 'test-secret', aiProvider: 'openai', aiModel: undefined, geminiKey: undefined, openaiKey: undefined, factorDesperdicio: 0.1, ...config };
-  const app = createApp({ repo, config: cfg, fetchImpl });
-  return { app, repo, http: request(app) };
+  // Correo simulado: guarda los códigos enviados en lugar de usar Gmail
+  const correos = [];
+  const mailer = { async enviarCodigo(para, nombre, codigo) { correos.push({ para, nombre, codigo }); } };
+  const app = createApp({ repo, config: cfg, fetchImpl, mailer });
+  return { app, repo, http: request(app), correos };
 }
 
 async function token(http, email) {

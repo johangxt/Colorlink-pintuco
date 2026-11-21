@@ -24,6 +24,12 @@ create table usuarios (
   rol           varchar(20)  not null check (rol in ('cliente', 'pintor', 'admin')),
   telefono      varchar(30),
   activo        boolean      not null default true,
+  -- Verificación de correo: el registro público inserta false y se pasa a true al confirmar el código
+  email_verificado    boolean     not null default true,
+  codigo_verificacion text,
+  codigo_expira       timestamptz,
+  codigo_intentos     integer     not null default 0,
+  codigo_enviado      timestamptz,
   created_at    timestamptz  not null default now()
 );
 
